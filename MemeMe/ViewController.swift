@@ -8,24 +8,14 @@
 
 import UIKit
 
-struct Meme {
-    var topText = ""
-    var bottomText = ""
-    var originalImage = UIImage()
-    var memedImage = UIImage()
-}
-
 class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var actionButton: UIBarButtonItem!
-    @IBOutlet weak var cancelButton: UIBarButtonItem!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
-    @IBOutlet weak var albumButton: UIBarButtonItem!
     @IBOutlet weak var topTextField: UITextField!
     @IBOutlet weak var bottomTextField: UITextField!
     @IBOutlet weak var bottomToolBar: UIToolbar!
-    @IBOutlet weak var topToolBar: UIToolbar!
     
     let memeTextAttributes: [String:Any] = [
         NSStrokeColorAttributeName: UIColor.black,
@@ -132,6 +122,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         // Render view to an image
         UIGraphicsBeginImageContext(self.view.frame.size)
         view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
+
         let memedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         
@@ -141,14 +132,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     private func hideToolBars(_ hidden: Bool) {
-        topToolBar.isHidden = hidden
+        self.navigationController?.isNavigationBarHidden = hidden
         bottomToolBar.isHidden = hidden
     }
     
     
     // MARK: - ImagePickerControllerDelegate
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+        if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
             imageView.image = image
         }
         dismiss(animated: true, completion: nil)
@@ -191,7 +182,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     func keyboardWillShow(_ notification: Notification) {
         // We only need to move the view frame up for the bottom text
         // field, not the top text field
-        if (bottomTextField.isFirstResponder) {
+        if bottomTextField.isFirstResponder {
             view.frame.origin.y = 0 - getKeyboardHeight(notification)
         }
     }

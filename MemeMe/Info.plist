@@ -36,6 +36,8 @@
 	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need to access your photos to create e meme.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need to access your camera to take a photo to create a meme.</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
