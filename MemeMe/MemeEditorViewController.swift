@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MemeEditorViewController.swift
 //  MemeMe
 //
 //  Created by Dean Copeland on 3/20/17.
@@ -8,8 +8,9 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
+    @IBOutlet weak var navigationBar: UINavigationBar!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var actionButton: UIBarButtonItem!
     @IBOutlet weak var cameraButton: UIBarButtonItem!
@@ -88,7 +89,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
 
     @IBAction func cancel(_ sender: Any) {
-        resetUI()
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func share(_ sender: Any) {
@@ -112,8 +113,14 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     private func save(_ memedImage: UIImage) {
-            let meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!, memedImage: memedImage)
-        }
+        let meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!, memedImage: memedImage)
+        
+        // Save it in the AppDelegate so it can be shared with other VCs
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.memes.append(meme)
+        
+        dismiss(animated: true, completion: nil)
+    }
     
     private func generateMemedImage() -> UIImage {
         
@@ -132,7 +139,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     }
     
     private func hideToolBars(_ hidden: Bool) {
-        self.navigationController?.isNavigationBarHidden = hidden
+        navigationBar.isHidden = hidden
         bottomToolBar.isHidden = hidden
     }
     
@@ -165,7 +172,7 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        return true;
+        return true
     }
     
     // MARK: - Keyboard notifications
