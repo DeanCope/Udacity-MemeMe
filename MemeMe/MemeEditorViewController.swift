@@ -47,17 +47,17 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     }
     
     private func resetUI() {
-        setupTextField(topTextField, initialText: TextDefaults.top)
-        setupTextField(bottomTextField, initialText: TextDefaults.bottom)
+        setup(textField: topTextField, initialText: TextDefaults.top)
+        setup(textField: bottomTextField, initialText: TextDefaults.bottom)
         imageView.image = nil
         setupUI()
     }
     
-    private func setupTextField(_ field: UITextField, initialText: String) {
-        field.defaultTextAttributes = memeTextAttributes
-        field.delegate = self
-        field.textAlignment = .center
-        field.text = initialText
+    private func setup(textField: UITextField, initialText: String) {
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.delegate = self
+        textField.textAlignment = .center
+        textField.text = initialText
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -89,7 +89,7 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     }
 
     @IBAction func cancel(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
     
     @IBAction func share(_ sender: Any) {
@@ -101,11 +101,15 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
         // pass the ActivityViewController memedImage as an activity Item
         let controller = UIActivityViewController(activityItems: [memedImage], applicationActivities: nil)
         
-        controller.completionWithItemsHandler = {(activity, completed, items, error) in
+        controller.completionWithItemsHandler = {(_, completed, _, _) in
             if (completed) {
                 self.save(memedImage)
             }
         }
+        
+        // The following two lines are required for iPad
+        controller.popoverPresentationController?.sourceView = self.view
+        controller.popoverPresentationController?.sourceRect = self.view.bounds
 
         // Present the ActivityViewController
         present(controller, animated: true, completion: nil)
@@ -119,7 +123,7 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.memes.append(meme)
         
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
     
     private func generateMemedImage() -> UIImage {
@@ -149,13 +153,13 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
         if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
             imageView.image = image
         }
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
         setupUI()
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
     
     // MARK: - UITextFieldDelegate
