@@ -10,17 +10,16 @@ import UIKit
 
 class SentMemesTableViewController: UITableViewController {
 
+    private struct Storyboard {
+        static let reuseIdentifier = "SentMemeCell"
+        static let showMemeDetailSegueId = "ShowMemeDetail"
+    }
+    
     var memes: [Meme] {
         get {
             let appDelegate = UIApplication.shared.delegate as! AppDelegate
             return appDelegate.memes
         }
-    }
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -42,7 +41,7 @@ class SentMemesTableViewController: UITableViewController {
 
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SentMemeCell", for: indexPath) as! SentMemeTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: Storyboard.reuseIdentifier, for: indexPath) as! SentMemeTableViewCell
         
         let meme = memes[indexPath.row]
         cell.memeImageView.image = meme.memedImage
@@ -56,11 +55,11 @@ class SentMemesTableViewController: UITableViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         //If the triggered seque is the "ShowMemeDetail" segue
-        if segue.identifier == "ShowMemeDetail" {
-            // Figure out which row was just tapped
+        if segue.identifier == Storyboard.showMemeDetailSegueId {
+            // Figure out which row was selected
             if let row = tableView.indexPathForSelectedRow?.row {
                 
-                // Get the item associated with this row and pass it along
+                // Get the meme associated with this row and pass it along
                 let meme = memes[row]
                 let detailViewController = segue.destination as! MemeDetailViewController
                 detailViewController.meme = meme

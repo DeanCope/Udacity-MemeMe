@@ -8,7 +8,11 @@
 
 import UIKit
 
-private let reuseIdentifier = "MemeCollectionViewCell"
+private struct Storyboard {
+    static let reuseIdentifier = "MemeCollectionViewCell"
+    static let showMemeDetailSegueId = "ShowMemeDetail"
+}
+
 
 class SentMemesCollectionViewController: UICollectionViewController {
     
@@ -43,13 +47,6 @@ class SentMemesCollectionViewController: UICollectionViewController {
             appDelegate.memes.append(meme1)
             appDelegate.memes.append(meme1)
             appDelegate.memes.append(meme1)
-            appDelegate.memes.append(meme1)
-            appDelegate.memes.append(meme1)
-            appDelegate.memes.append(meme1)
-            appDelegate.memes.append(meme1)
-            appDelegate.memes.append(meme1)
-            appDelegate.memes.append(meme1)
-            appDelegate.memes.append(meme1)
         }
  */
         
@@ -64,13 +61,11 @@ class SentMemesCollectionViewController: UICollectionViewController {
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         //If the triggered seque is the "ShowMemeDetail" segue
-        if segue.identifier == "ShowMemeDetail" {
-            // Figure out which row was just tapped
-            
+        if segue.identifier == Storyboard.showMemeDetailSegueId {
+            // Figure out which row was selected
             if let path = self.collectionView?.indexPathsForSelectedItems?.first {
                 
-                // Get the item associated with this row and pass it along
-                // let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                // Get the meme associated with this row and pass it along
                 let meme = memes[path.row]
                 let detailViewController = segue.destination as! MemeDetailViewController
                 detailViewController.meme = meme
@@ -93,7 +88,7 @@ class SentMemesCollectionViewController: UICollectionViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! SentMemeCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Storyboard.reuseIdentifier, for: indexPath) as! SentMemeCollectionViewCell
     
         let meme = memes[indexPath.row]
         
